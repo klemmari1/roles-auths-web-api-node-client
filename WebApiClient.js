@@ -61,7 +61,7 @@ function init() {
     config.callbackUriHpa = encodeURI(config.clientBaseUrl + '/callback/hpa');
     config.callbackUriHpalist = encodeURI(config.clientBaseUrl + '/callback/hpalist');
     config.callbackUriHpalistJwt = encodeURI(config.clientBaseUrl + '/callback/hpalist/jwt/');
-    config.callbackUriYpa = encodeURI(config.clientBaseUrl + '/callback/ypa');
+    // config.callbackUriYpa = encodeURI(config.clientBaseUrl + '/callback/ypa');
 
     server.listen(config.port, function () {
         console.log('\nBrowse to:\n\n' 
@@ -322,7 +322,7 @@ app.get('/register/ypa/:personId', function (request, response) {
  * Resource for handling return from Web API selection UI. First changes OAuth code to OAuth token 
  * with Web API backend. Then using the token gets and returns the company roles of the delegate.
  */
-app.get('/callback/ypa', function (request, response) {
+app.get('/oidc/eauthorizations/callback', function (request, response) {
     var urlParts = url.parse(request.url, true);
     changeCodeToToken(request.cookies.webApiSessionId, urlParts.query.code, '', config.callbackUriYpa).
         then(getRoles).
@@ -372,7 +372,10 @@ function register(mode, delegatePersonId, callbackUri, response) {
                     reject(e.stack);
                 }
             } else {
-                reject(res.toJSON());
+                console.log(error);
+                if (res) {
+                    reject(res.toJSON());
+                }
             }
         });
 
